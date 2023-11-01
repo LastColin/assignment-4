@@ -11,16 +11,16 @@ def _get_connection() -> Driver:
 
     return driver
 
-def findCar(car):
-    data = _get_connection().execute_query('MATCH (a:car) Return a;')
+def findCar(regnr):
+    data = _get_connection().execute_query('MATCH (a:car) WHERE a.regnr = $regnr RETURN a;', regnr=regnr)
     return data
 
-def updateCar(car):
-    data = _get_connection().execute_query("MATCH (a:car) where a.name = $name RETURN a;", name=car.name)
+def updateCar(regnr):
+    data = _get_connection().execute_query("MATCH (a:car) where a.name = $name RETURN a;", )
     return data
 
-def addCar(name):
-    data = _get_connection().execute_query("CREATE (a:car {name: $name}) RETURN a;", name=name)
+def addCar(model, make, regnr):
+    data = _get_connection().execute_query("CREATE (a:car {model: $model, make: $make, regnr: $regnr}) RETURN a;", model=model, make=make, regnr=regnr)
     return data
 
 
@@ -54,3 +54,8 @@ class Car:
     
     def set_Regnr(self, value):
         self.regnr = value
+
+
+addCar("Audi", "A6", "AB12345")
+x = findCar("AB12345")
+print(x)
